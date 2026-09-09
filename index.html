@@ -65,6 +65,7 @@ const firebaseConfig={
  measurementId:"G-CB7P2NEHET"
 };
 
+window.addEventListener("error",e=>{ const el=document.getElementById("err"); if(el && !window.__neonStarted){el.style.display="block";el.textContent="Game script error: "+(e.message||"Unknown JavaScript error");} });
 const $=id=>document.getElementById(id);
 const menu=$("menu"),play=$("play"),nameInput=$("name"),err=$("err"),status=$("status"),scoreEl=$("score"),board=$("board");
 const canvas=$("game"),ctx=canvas.getContext("2d");
@@ -252,7 +253,7 @@ function collision(){
   }
  }
 }
-async function pickups(){
+async function spawnPickups(){
  if(!uid||performance.now()-lastPickup<5000)return;lastPickup=performance.now();
  if(Object.keys(pickups).length<5){
   const p=spawn(),kind=Math.random()<.55?"energy":"heal";
@@ -263,7 +264,7 @@ async function pickups(){
 let last=performance.now();
 function loop(t){
  const dt=Math.min(.033,(t-last)/1000);last=t;
- if(started){update(dt);collision();pickups();syncPlayer();
+ if(started){update(dt);collision();spawnPickups();syncPlayer();
   for(const b of Object.values(bullets)){b.x+=(b.vx||0)*dt;b.y+=(b.vy||0)*dt}
  }
  draw();requestAnimationFrame(loop);
