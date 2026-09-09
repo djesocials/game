@@ -52,7 +52,7 @@ button:disabled{opacity:.55;cursor:wait}
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import {getAuth,signInAnonymously} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import {getDatabase,ref,set,update,remove,onValue,onDisconnect,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+import {getDatabase,ref,set,update as dbUpdate,remove,onValue,onDisconnect,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
 const firebaseConfig={
  apiKey:"AIzaSyC_VF2KTDiX1WFZlNjBgSis3tDIbirVMOk",
@@ -161,7 +161,7 @@ async function syncPlayer(){
  if(!uid||!db)return;
  const now=performance.now();if(now-lastSend<70)return;lastSend=now;
  try{
-  await update(ref(db,"players/"+uid),{
+  await dbUpdate(ref(db,"players/"+uid),{
    x:Math.round(me.x),y:Math.round(me.y),a:me.a,hp:Math.round(me.hp),
    score,streak,updated:serverTimestamp()
   });
